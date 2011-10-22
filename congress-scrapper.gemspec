@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Congress::Scrapper::VERSION
   s.authors     = ["Luismi Cavallé", "Raimond García", "Alberto Fernández-Capel"]
   s.email       = ["voodoorai2000 at gmail"]
-  s.homepage    = ""
+  s.homepage    = "http://github.com/agoraciudadana/congress-scrapper"
   s.summary     = %q{Scrapper to get proposals from Spanish Congress}
   s.description = %q{Scrapper to get proposals from Spanish Congress}
 
