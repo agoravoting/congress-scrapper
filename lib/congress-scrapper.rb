@@ -3,6 +3,7 @@
 require "congress-scrapper/version"
 require "mechanize"
 require "progressbar"
+require_relative "proposer"
 
 module Congress
   module Scrapper
@@ -33,21 +34,20 @@ module Congress
 
           commission_name = clean_text(text_for("//*[@class='apartado_iniciativa' and contains(normalize-space(text()),'Comisión competente:')]/following-sibling::*[@class='texto']"))
 
-          proposer = clean_text(text_for("//*[@class='apartado_iniciativa' and contains(normalize-space(text()),'Autor:')]/following-sibling::*[@class='texto']"))
+          proposer_name = clean_text(text_for("//*[@class='apartado_iniciativa' and contains(normalize-space(text()),'Autor:')]/following-sibling::*[@class='texto']"))
 
           proposed_at_text = text_for("//*[@class='texto' and contains(normalize-space(text()),'Presentado el')]")
           proposed_at = Date.new($3.to_i, $2.to_i, $1.to_i) if proposed_at_text && proposed_at_text.match(/Presentado\s+el\s+(\d\d)\/(\d\d)\/(\d\d\d\d)/)
 
           closed_at_text = text_for("//*[@class='apartado_iniciativa' and contains(normalize-space(text()),'Tramitación seguida por la iniciativa:')]/following-sibling::*[@class='texto']")
           closed_at = Date.new($3.to_i, $2.to_i, $1.to_i) if closed_at_text && closed_at_text.match(/Concluido\s+.+\s+desde (\d\d)\/(\d\d)\/(\d\d\d\d)/)
-          
           proposal = {:title               => clean_text(title.content),
                       :official_url        => "http://www.congreso.es" + title[:href],
                       :proposal_type       => proposal_type,
                       :closed_at           => closed_at,
                       :official_resolution => resolution,
-                      :commission_name     => commission_name,
-                      :proposer            => proposer,
+                      :category_name       => category(commission_name),
+                      :proposer_name       => proposer(proposer_name),
                       :proposed_at         => proposed_at}
  
           progress.inc
@@ -74,6 +74,20 @@ module Congress
     def clean_text(text)
       return unless text
       text.gsub(/\s+/,' ').gsub(/\s*\.\s*$/, '').strip
+    end
+
+    def category(name)
+      return unless name
+      upcase_first(name.gsub(/Comisión( Mixta)?( del?| para las?)? /, ""))
+    end
+
+    def upcase_first(string)
+      string[0..0].upcase + string[1..-1]
+    end
+
+    def proposer(string)
+      return unless string
+      Proposer.new(string).name
     end
   end
 end

@@ -45,8 +45,8 @@ describe Congress::Scrapper do
       proposal[:closed_at].should be_nil
       proposal[:official_resolution].should be_nil
       proposal[:proposed_at].should == Date.new(2010, 4, 9)
-      proposal[:commission_name].should == "Comisión de Medio Ambiente, Agricultura y Pesca"
-      proposal[:proposer].should == "Grupo Parlamentario Socialista"
+      proposal[:category_name].should == "Medio Ambiente, Agricultura y Pesca"
+      proposal[:proposer_name].should == "PSOE"
     end
     
     it "should populate closed proposals info" do
@@ -56,8 +56,8 @@ describe Congress::Scrapper do
       proposal[:proposal_type].should       == "Proyecto de ley"
       proposal[:closed_at].should           == Date.new(2009, 6, 24)
       proposal[:official_resolution].should == "Aprobado sin modificaciones"
-      proposal[:commission_name].should     == "Comisión de Economía y Hacienda"
-      proposal[:proposer].should            == "Gobierno"
+      proposal[:category_name].should       == "Economía y Hacienda"
+      proposal[:proposer_name].should       == "Gobierno"
     end
   end
 end
