@@ -42,7 +42,7 @@ describe Congress::Scrapper do
       proposal[:official_url].should == proposal_page1
       proposal[:proposal_type].should == "Proyecto de ley"
       proposal[:closed_at].should be_nil
-      proposal[:official_resolution].should == "Comisión de Medio Ambiente, Agricultura y Pesca Enmiendas"
+      proposal[:status].should == "Comisión de Medio Ambiente, Agricultura y Pesca Enmiendas"
       proposal[:proposed_at].should == Date.new(2010, 4, 9)
       proposal[:category_name].should == "Medio Ambiente, Agricultura y Pesca"
       proposal[:proposer_name].should == "PSOE"
@@ -54,7 +54,7 @@ describe Congress::Scrapper do
       proposal[:official_url].should        == proposal_page2
       proposal[:proposal_type].should       == "Proyecto de ley"
       proposal[:closed_at].should           == Date.new(2012, 10, 24)
-      proposal[:official_resolution].should == "Concluido - (Aprobado con modificaciones)"
+      proposal[:status].should == "Concluido - (Aprobado con modificaciones)"
       proposal[:category_name].should       == "Hacienda y Administraciones Públicas"
       proposal[:proposer_name].should       == "Gobierno"
     end
@@ -65,7 +65,7 @@ describe Congress::Scrapper do
       proposal[:official_url].should        == proposal_page4
       proposal[:proposal_type].should       == "Proyecto de ley"
       proposal[:closed_at].should           == Date.new(2009, 6, 24)
-      proposal[:official_resolution].should == "Aprobado sin modificaciones"
+      proposal[:status].should == "Aprobado sin modificaciones"
       proposal[:category_name].should       == "Economía y Hacienda"
       proposal[:proposer_name].should       == "Gobierno"
     end
