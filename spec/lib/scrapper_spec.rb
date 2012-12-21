@@ -11,7 +11,7 @@ describe Congress::Scrapper do
       stub_request(:post, search_results_page).to_return(:body => fixture(:search_results_page1), :headers => { 'Content-Type' => 'text/html' })
       stub_request(:get, search_results_next_page).to_return(:body => fixture(:search_results_page2), :headers => { 'Content-Type' => 'text/html' })
       stub_request(:get, proposal_page1).to_return(:body => fixture(:open_proposal_page), :headers => { 'Content-Type' => 'text/html' })
-      stub_request(:get, proposal_page2).to_return(:body => "", :headers => { 'Content-Type' => 'text/html' })
+      stub_request(:get, proposal_page2).to_return(:body => fixture(:closed_proposal_with_changes_page), :headers => { 'Content-Type' => 'text/html' })
       stub_request(:get, proposal_page3).to_return(:body => "", :headers => { 'Content-Type' => 'text/html' })
       stub_request(:get, proposal_page4).to_return(:body => fixture(:closed_proposal_page), :headers => { 'Content-Type' => 'text/html' })
     end
@@ -37,19 +37,29 @@ describe Congress::Scrapper do
     end
     
     it "should populate open proposals info" do
-      
       proposals = Congress::Scrapper.scrape
       proposal = proposals.first
       proposal[:official_url].should == proposal_page1
       proposal[:proposal_type].should == "Proyecto de ley"
       proposal[:closed_at].should be_nil
-      proposal[:official_resolution].should be_nil
+      proposal[:official_resolution].should == "Comisión de Medio Ambiente, Agricultura y Pesca Enmiendas"
       proposal[:proposed_at].should == Date.new(2010, 4, 9)
       proposal[:category_name].should == "Medio Ambiente, Agricultura y Pesca"
       proposal[:proposer_name].should == "PSOE"
     end
     
-    it "should populate closed proposals info" do
+    it "should populate closed proposals info with modifications" do
+      proposals = Congress::Scrapper.scrape
+      proposal = proposals[1]
+      proposal[:official_url].should        == proposal_page2
+      proposal[:proposal_type].should       == "Proyecto de ley"
+      proposal[:closed_at].should           == Date.new(2012, 10, 24)
+      proposal[:official_resolution].should == "Concluido - (Aprobado con modificaciones)"
+      proposal[:category_name].should       == "Hacienda y Administraciones Públicas"
+      proposal[:proposer_name].should       == "Gobierno"
+    end
+
+    it "should populate closed proposals info without modifications" do
       proposals = Congress::Scrapper.scrape
       proposal = proposals.last
       proposal[:official_url].should        == proposal_page4
@@ -59,5 +69,6 @@ describe Congress::Scrapper do
       proposal[:category_name].should       == "Economía y Hacienda"
       proposal[:proposer_name].should       == "Gobierno"
     end
+    
   end
 end

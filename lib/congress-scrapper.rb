@@ -29,9 +29,10 @@ module Congress
           @proposal_page = agent.get(title[:href])
           
           proposal_type = clean_text(text_for(".subtitulo_competencias"))
-          
-          resolution = clean_text(text_for("//*[@class='apartado_iniciativa' and contains(normalize-space(text()),'Resultado de la tramitación')]/following-sibling::*[@class='texto']"))
 
+          resolution = clean_text(text_for("//*[@class='apartado_iniciativa' and contains(normalize-space(text()),'Resultado de la tramitación')]/following-sibling::*[@class='texto']")) ||
+                       clean_text(text_for("//*[@class='apartado_iniciativa' and contains(normalize-space(text()),'Situación actual')]/following-sibling::*[@class='texto']"))
+                       
           commission_name = clean_text(text_for("//*[@class='apartado_iniciativa' and contains(normalize-space(text()),'Comisión competente:')]/following-sibling::*[@class='texto']"))
 
           proposer_name = clean_text(text_for("//*[@class='apartado_iniciativa' and contains(normalize-space(text()),'Autor:')]/following-sibling::*[@class='texto']"))
