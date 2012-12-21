@@ -76,7 +76,7 @@ describe Congress::Scrapper do
       proposals = Congress::Scrapper.scrape
       proposal = proposals[2]
       proposal[:official_url].should        == proposal_page3
-      proposal[:body].should                =~ /En cumplimiento de lo dispuesto en/
+      proposal[:body].should                =~ /En cumplimiento de lo dispuesto en el artículo 86.2/
     end
     
   end

@@ -99,8 +99,9 @@ module Congress
       if page.search("//*[@class='apartado_iniciativa' and contains(normalize-space(text()),'Boletines:')]") and 
          url = page.link_with(:text => /texto/).href.strip and 
          url.match(/PopUpCGI/)
-         
+
          law_draft_page = agent.get("http://www.congreso.es" + url)
+         law_draft_page.encoding = "utf-8"        
          law_draft_page.search(".texto_completo").text
       end
     end
