@@ -32,6 +32,10 @@ module CongressWebSitePaths
   def proposal_page5
     "http://www.congreso.es/portal/page/portal/Congreso/Congreso/Iniciativas/Busqueda%20Avanzada?_piref73_1335465_73_1335464_1335464.next_page=/wc/servidorCGI&CMD=VERLST&BASE=IW10&PIECE=IWA0&FMT=INITXD1S.fmt&FORM1=INITXLTS.fmt&DOCS=13-13&QUERY=%28I%29.ACIN1.+%26+%28%22COMPETENCIA+LEGISLATIVA+PLENA%22%29.TPTR."
   end
+
+  def full_proposal_text
+    "http://www.congreso.es/portal/page/portal/Congreso/PopUpCGI"
+  end
   
 end
 

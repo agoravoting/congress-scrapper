@@ -12,8 +12,10 @@ describe Congress::Scrapper do
       stub_request(:get, search_results_next_page).to_return(:body => fixture(:search_results_page2), :headers => { 'Content-Type' => 'text/html' })
       stub_request(:get, proposal_page1).to_return(:body => fixture(:open_proposal_page), :headers => { 'Content-Type' => 'text/html' })
       stub_request(:get, proposal_page2).to_return(:body => fixture(:closed_proposal_with_changes_page), :headers => { 'Content-Type' => 'text/html' })
-      stub_request(:get, proposal_page3).to_return(:body => "", :headers => { 'Content-Type' => 'text/html' })
+      stub_request(:get, proposal_page3).to_return(:body => fixture(:proposal_with_law_draft), :headers => { 'Content-Type' => 'text/html' })
       stub_request(:get, proposal_page4).to_return(:body => fixture(:closed_proposal_page), :headers => { 'Content-Type' => 'text/html' })
+
+      stub_request(:get, /#{full_proposal_text}/).to_return(:body => fixture(:full_proposal_text), :headers => { 'Content-Type' => 'text/html' })
     end
     
     it "should go to the proposal search form" do
@@ -68,6 +70,13 @@ describe Congress::Scrapper do
       proposal[:status].should == "Aprobado sin modificaciones"
       proposal[:category_name].should       == "Economía y Hacienda"
       proposal[:proposer_name].should       == "Gobierno"
+    end
+
+    it "should populate the full proposal text" do
+      proposals = Congress::Scrapper.scrape
+      proposal = proposals[2]
+      proposal[:official_url].should        == proposal_page3
+      proposal[:body].should                =~ /En cumplimiento de lo dispuesto en/
     end
     
   end

@@ -42,6 +42,9 @@ module Congress
 
           closed_at_text = text_for("//*[@class='apartado_iniciativa' and contains(normalize-space(text()),'Tramitación seguida por la iniciativa:')]/following-sibling::*[@class='texto']")
           closed_at = Date.new($3.to_i, $2.to_i, $1.to_i) if closed_at_text && closed_at_text.match(/Concluido\s+.+\s+desde (\d\d)\/(\d\d)\/(\d\d\d\d)/)
+          
+          body = full_proposal_text(@proposal_page)
+
           proposal = {:title               => clean_text(title.content),
                       :official_url        => "http://www.congreso.es" + title[:href],
                       :proposal_type       => proposal_type,
@@ -49,7 +52,8 @@ module Congress
                       :status              => status,
                       :category_name       => category(commission_name),
                       :proposer_name       => proposer(proposer_name),
-                      :proposed_at         => proposed_at}
+                      :proposed_at         => proposed_at,
+                      :body                => body}
  
           progress.inc
           
@@ -90,5 +94,16 @@ module Congress
       return unless string
       Proposer.new(string).name
     end
+
+    def full_proposal_text(page)
+      if page.search("//*[@class='apartado_iniciativa' and contains(normalize-space(text()),'Boletines:')]") and 
+         url = page.link_with(:text => /texto/).href.strip and 
+         url.match(/PopUpCGI/)
+         
+         law_draft_page = agent.get("http://www.congreso.es" + url)
+         law_draft_page.search(".texto_completo").text
+      end
+    end
+
   end
 end
